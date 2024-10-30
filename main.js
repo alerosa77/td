@@ -90,15 +90,15 @@ function setup(loader, resources) {
 
   function getRandomTileType() {
     const rand = Math.random() * 100;
-    if (rand < 30) return 'grass1';
-    if (rand < 50) return 'grass2';
-    if (rand < 55) return 'dirt1';
-    if (rand < 60) return 'dirt2';
-    if (rand < 65) return 'flower1';
-    if (rand < 70) return 'flower2';
-    if (rand < 75) return 'rock1'; // Use new names
-    if (rand < 80) return 'rock2'; // Use new names
-    if (rand < 85) return 'wood1';
+    if (rand < 40) return 'grass1';
+    if (rand < 70) return 'grass2';
+    if (rand < 73) return 'dirt1';
+    if (rand < 76) return 'dirt2';
+    if (rand < 79) return 'flower1';
+    if (rand < 81) return 'flower2';
+    if (rand < 83) return 'rock1'; // Use new names
+    if (rand < 86) return 'rock2'; // Use new names
+    if (rand < 88) return 'wood1';
     if (rand < 90) return 'wood2';
     return 'resource'; // Resource tiles ~10%
   }
