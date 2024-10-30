@@ -1,6 +1,13 @@
 // main.js
 let app; // Declare app in a wider scope
 
+// Declare global variables for map dimensions
+const tileSize = 64;
+const mapWidth = 50;  // Map width
+const mapHeight = 50; // Map height
+const textures = {};
+let dnaUnits = 100; // Initial DNA Units
+
 document.addEventListener('DOMContentLoaded', () => {
     app = new PIXI.Application({
         width: window.innerWidth,
@@ -8,12 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         backgroundColor: 0x1099bb
     });
     document.body.appendChild(app.view);
-
-    const tileSize = 64;
-    const mapWidth = 50;
-    const mapHeight = 50;
-    const textures = {};
-    let dnaUnits = 100;
 
     // Load the textures
     PIXI.Loader.shared
@@ -53,7 +54,25 @@ document.addEventListener('DOMContentLoaded', () => {
             ));
         }
 
-        createMap(); // Now this will have access to app
+        createMap(); // Now this will have access to app and the map dimensions
         setupUI();   // Ensure this function is defined elsewhere
     }
 });
+
+// Ensure createMap is defined, e.g.:
+function createMap() {
+    // Example of using mapWidth and mapHeight
+    for (let y = 0; y < mapHeight; y++) {
+        for (let x = 0; x < mapWidth; x++) {
+            const tile = new PIXI.Sprite(textures.grass1); // Just an example
+            tile.x = x * tileSize;
+            tile.y = y * tileSize;
+            app.stage.addChild(tile);
+        }
+    }
+}
+
+// Ensure setupUI is defined, e.g.:
+function setupUI() {
+    // UI setup code goes here
+}
