@@ -28,12 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
         .add('resource', 'tileset/resource.png')
         .add('powerplant', 'buildings/powerplant.png')
         .add('extractor', 'buildings/extractor.png')
-        .add('pylon', 'buildings/pylon.png');
-
-    // Load laser tower frames dynamically
-    for (let i = 1; i <= 11; i++) {
-        PIXI.Loader.shared.add(`lasertower_frame${i}`, `buildings/lasertower_frame${i}.png`);
-    }
+        .add('pylon', 'buildings/pylon.png')
+        .add('lasertower', 'buildings/lasertower.png'); // Add the sprite sheet
 
     PIXI.Loader.shared.load(setup);
 
@@ -44,11 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Create an array to hold laser tower frames
         const lasertowerFrames = [];
-        for (let i = 1; i <= 11; i++) {
-            lasertowerFrames.push(resources[`lasertower_frame${i}`].texture);
+        const frameWidth = 64; // Width of each frame
+        const frameHeight = 64; // Height of each frame
+        for (let i = 0; i < 11; i++) {
+            lasertowerFrames.push(new PIXI.Texture(
+                textures.lasertower,
+                new PIXI.Rectangle(i * frameWidth, 0, frameWidth, frameHeight) // Extract frame
+            ));
         }
 
-        createMap(); // Make sure this function is defined elsewhere
-        setupUI();   // Make sure this function is defined elsewhere
+        createMap(); // Ensure this function is defined elsewhere
+        setupUI();   // Ensure this function is defined elsewhere
     }
 });
