@@ -6,7 +6,7 @@ function setupUI() {
     app.stage.addChild(uiContainer);
 
     // Create DNA Units display
-    const dnaText = new PIXI.Text(`DNA Units: ${dnaUnits}`, {
+    const dnaText = new PIXI.Text(`DNA Units: ${getDnaUnits()}`, {
         fontFamily: 'Saira Light',
         fontSize: 24,
         fill: 0xffffff
@@ -62,82 +62,20 @@ function setupUI() {
             // Check if the user has enough DNA Units
             if (canAffordBuilding(selectedBuilding)) {
                 placeBuilding(selectedBuilding, tileX, tileY);
-                updateDnaUnits(selectedBuilding); // Deduct DNA Units based on the building
+                subtractDnaUnits(getBuildingCost(selectedBuilding)); // Deduct DNA Units based on the building
+                updateDnaDisplay(dnaText); // Update the displayed DNA Units
             }
         }
     });
 }
 
-// Function to check if the player can afford a building
-function canAffordBuilding(building) {
-    switch (building) {
-        case "Power Plant":
-            return dnaUnits >= 50; // Example cost
-        case "Extractor":
-            return dnaUnits >= 30; // Example cost
-        case "Pylon":
-            return dnaUnits >= 20; // Example cost
-        case "Laser Tower":
-            return dnaUnits >= 70; // Example cost
-        default:
-            return false;
-    }
-}
-
-// Function to place a building on the map
-function placeBuilding(building, x, y) {
-    let buildingTexture;
-    switch (building) {
-        case "Power Plant":
-            buildingTexture = textures.powerplant;
-            break;
-        case "Extractor":
-            buildingTexture = textures.extractor;
-            break;
-        case "Pylon":
-            buildingTexture = textures.pylon;
-            break;
-        case "Laser Tower":
-            buildingTexture = textures.lasertower;
-            break;
-        default:
-            return; // If the building type is not recognized
-    }
-
-    const buildingSprite = new PIXI.Sprite(buildingTexture);
-    buildingSprite.x = x * tileSize;
-    buildingSprite.y = y * tileSize;
-    app.stage.addChild(buildingSprite);
-}
-
 // Function to update the DNA units display
-function updateDnaUnits(building) {
-    switch (building) {
-        case "Power Plant":
-            dnaUnits -= 50; // Deduct cost
-            break;
-        case "Extractor":
-            dnaUnits -= 30; // Deduct cost
-            break;
-        case "Pylon":
-            dnaUnits -= 20; // Deduct cost
-            break;
-        case "Laser Tower":
-            dnaUnits -= 70; // Deduct cost
-            break;
-        default:
-            break;
-    }
-
-    // Update the displayed DNA Units
-    // Assuming there is a reference to the dnaText in setupUI
-    const dnaText = app.stage.getChildAt(0).getChildAt(0); // Get the DNA units text
-    dnaText.text = `DNA Units: ${dnaUnits}`;
+function updateDnaDisplay(dnaText) {
+    dnaText.text = `DNA Units: ${getDnaUnits()}`;
 }
 
 // Function to update the cursor to show selected building
 function updateCursor() {
-    // Logic to change the cursor to the selected building sprite
     if (selectedBuilding) {
         const cursorTexture = textures[selectedBuilding.toLowerCase().replace(' ', '')]; // Assume naming is consistent
         app.renderer.plugins.interaction.cursorStyles['pointer'] = cursorTexture; // Set custom cursor style
