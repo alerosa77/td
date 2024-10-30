@@ -61,3 +61,4 @@ function onBuildingButtonClick(buildingName) {
         isPlacingBuilding = false; // Disable placing mode
     });
 }
+
