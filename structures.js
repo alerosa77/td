@@ -1,3 +1,5 @@
+let dnaUnits = 100; // Example initial value for DNA Units
+
 function placeBuilding(x, y) {
     if (isPlacingBuilding && currentBuilding && dnaUnits > 0) {
         let buildingSprite;
