@@ -6,7 +6,6 @@ const tileSize = 64;
 const mapWidth = 50;  // Map width
 const mapHeight = 50; // Map height
 const textures = {};
-let dnaUnits = 100; // Initial DNA Units
 
 document.addEventListener('DOMContentLoaded', () => {
     app = new PIXI.Application({
@@ -41,27 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
             textures[key] = resources[key].texture;
         });
 
-        // Create an array to hold laser tower frames
-        const lasertowerFrames = [];
-        const frameWidth = 64; // Adjust this to the actual width of each frame
-        const frameHeight = 64; // Adjust this to the actual height of each frame
-
-        // Loop to extract frames from the single image
-        for (let i = 0; i < 11; i++) {
-            lasertowerFrames.push(new PIXI.Texture(
-                textures.lasertower,
-                new PIXI.Rectangle(i * frameWidth, 0, frameWidth, frameHeight) // Extract frame
-            ));
-        }
-
         createMap(); // Now this will have access to app and the map dimensions
-        setupUI();   // Ensure this function is defined elsewhere
+        setupUI();   // Setup the UI
     }
 });
 
-// Ensure createMap is defined, e.g.:
+// Ensure createMap is defined
 function createMap() {
-    // Example of using mapWidth and mapHeight
     for (let y = 0; y < mapHeight; y++) {
         for (let x = 0; x < mapWidth; x++) {
             const tile = new PIXI.Sprite(textures.grass1); // Just an example
@@ -70,9 +55,4 @@ function createMap() {
             app.stage.addChild(tile);
         }
     }
-}
-
-// Ensure setupUI is defined, e.g.:
-function setupUI() {
-    // UI setup code goes here
 }
