@@ -10,6 +10,8 @@ function canAffordBuilding(buildingType) {
     return dnaUnits >= buildingCosts[buildingType];
 }
 
+let dnaUnits = 100; // Initialize DNA Units
+
 function deductCost(buildingType) {
     const buildingCosts = {
         "Power Plant": 30,
