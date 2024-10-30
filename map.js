@@ -2,13 +2,9 @@ function createMap() {
     const mapContainer = new PIXI.Container();
     app.stage.addChild(mapContainer);
 
-    const totalTiles = mapWidth * mapHeight;
-    const resourceTileCount = Math.floor(totalTiles * 0.05); // 5% of total tiles
-    const groundTileCount = totalTiles - resourceTileCount;
-
     for (let y = 0; y < mapHeight; y++) {
         for (let x = 0; x < mapWidth; x++) {
-            const tileType = getRandomTileType(groundTileCount, resourceTileCount);
+            const tileType = getRandomTileType();
             const tileSprite = new PIXI.Sprite(textures[tileType]);
             tileSprite.x = (x - y) * (tileSize / 2);
             tileSprite.y = (x + y) * (tileSize / 4);
@@ -35,7 +31,7 @@ function createMap() {
     });
 }
 
-function getRandomTileType(groundTileCount, resourceTileCount) {
+function getRandomTileType() {
     const rand = Math.random() * 100;
     if (rand < 40) return 'grass1';
     if (rand < 70) return 'grass2';
@@ -47,5 +43,5 @@ function getRandomTileType(groundTileCount, resourceTileCount) {
     if (rand < 86) return 'rock2';
     if (rand < 88) return 'wood1';
     if (rand < 90) return 'wood2';
-    return 'resource'; // Returns resource tile
+    return 'resource';
 }
