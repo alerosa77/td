@@ -7,19 +7,19 @@ function placeBuilding(x, y) {
         switch (currentBuilding) {
             case 'Power Plant':
                 buildingSprite = new PIXI.Sprite(textures.powerplant);
-                buildingSprite.scale.set(1, 1); // Scale to match the tile size
+                buildingSprite.scale.set(0.0128, 0.0128); // Scale to match tile size
                 break;
             case 'Extractor':
                 buildingSprite = new PIXI.Sprite(textures.extractor);
-                buildingSprite.scale.set(1, 1); // Scale to match the tile size
+                buildingSprite.scale.set(1, 1); // Assuming extractor is already at tile size
                 break;
             case 'Pylon':
                 buildingSprite = new PIXI.Sprite(textures.pylon);
-                buildingSprite.scale.set(1, 1); // Scale to match the tile size
+                buildingSprite.scale.set(1, 1); // Assuming pylon is already at tile size
                 break;
             case 'Laser Tower':
                 buildingSprite = new PIXI.Sprite(textures.lasertower);
-                buildingSprite.scale.set(1, 1); // Scale to match the tile size
+                buildingSprite.scale.set(1, 1); // Assuming laser tower is already at tile size
                 break;
         }
 
