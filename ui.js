@@ -1,63 +1,52 @@
 function setupUI() {
-    createDNAUnitsDisplay(); // Create DNA Units display
-    createBuildingButtons(); // Create building buttons
-}
-
-function createDNAUnitsDisplay() {
-    const dnaUnitsText = new PIXI.Text(`DNA Units: ${dnaUnits}`, {
-        fontFamily: 'Saira Light',
-        fontSize: 36,
-        fill: 0xffffff,
-    });
-    dnaUnitsText.anchor.set(0.5);
-    dnaUnitsText.position.set(app.screen.width / 2, 30); // Center top of the screen
-    app.stage.addChild(dnaUnitsText);
-
-    // Update the text dynamically if DNA units change
-    const updateDNAUnits = () => {
-        dnaUnitsText.text = `DNA Units: ${dnaUnits}`;
-    };
-
-    // Return the function to update the display
-    return updateDNAUnits;
-}
-
-function createBuildingButtons() {
     const buttonContainer = new PIXI.Container();
     app.stage.addChild(buttonContainer);
 
-    const buildingTypes = ['Power Plant', 'Extractor', 'Pylon', 'Laser Tower'];
+    const buttonNames = ['Power Plant', 'Extractor', 'Pylon', 'Laser Tower'];
+    buttonNames.forEach((name, index) => {
+        const button = new PIXI.Graphics();
+        button.beginFill(0x808080, 0.5); // Dark gray with 50% transparency
+        button.drawRoundedRect(100, 100 + index * 60, 200, 50, 10); // Rounded rectangle
+        button.endFill();
+        button.interactive = true;
+        button.buttonMode = true;
 
-    buildingTypes.forEach((buildingType, index) => {
-        const buttonWidth = 200;
-        const buttonHeight = 50;
-
-        // Create a rounded rectangle for the button background
-        const buttonBackground = new PIXI.Graphics();
-        buttonBackground.beginFill(0x333333, 0.5); // Dark gray with 50% transparency
-        buttonBackground.drawRoundedRect(0, 0, buttonWidth, buttonHeight, 10); // Rounded corners
-        buttonBackground.endFill();
-        buttonBackground.y = 100 + index * (buttonHeight + 10); // Spacing between buttons
-        buttonContainer.addChild(buttonBackground);
-
-        // Create button text
-        const buttonText = new PIXI.Text(buildingType, {
-            fontFamily: 'Saira Light',
-            fontSize: 24,
-            fill: 0xffffff,
-        });
+        const buttonText = new PIXI.Text(name, { fontFamily: 'Saira Light', fontSize: 24, fill: 0xFFFFFF });
         buttonText.anchor.set(0.5);
-        buttonText.x = buttonWidth / 2; // Center text horizontally
-        buttonText.y = buttonHeight / 2; // Center text vertically
-        buttonBackground.addChild(buttonText); // Add text to button background
+        buttonText.x = 200;
+        buttonText.y = 125 + index * 60; // Center the text vertically
+        button.addChild(buttonText);
 
-        // Make button interactive
-        buttonBackground.interactive = true;
-        buttonBackground.buttonMode = true;
-        buttonBackground.on('pointerdown', () => {
-            currentBuilding = buildingType;
-            isPlacingBuilding = true; // Set placing mode
-            alert(`Selected: ${buildingType}`);
+        button.on('pointerdown', () => {
+            onBuildingButtonClick(name);
         });
+
+        buttonContainer.addChild(button);
+    });
+}
+
+function onBuildingButtonClick(buildingName) {
+    // Set the current building and update the cursor
+    currentBuilding = buildingName;
+    isPlacingBuilding = true; // Enable placing mode
+
+    // Change the cursor to the building sprite at 50% transparency
+    const cursorSprite = new PIXI.Sprite(textures[buildingName.toLowerCase().replace(' ', '')]); // Use building name to get texture
+    cursorSprite.scale.set(0.0128, 0.0128); // Scale down the cursor to tile size
+    cursorSprite.alpha = 0.5; // Set to 50% transparency
+    app.stage.addChild(cursorSprite);
+
+    // Update mouse move event to track placement
+    app.view.on('mousemove', (e) => {
+        const mousePos = e.data.getLocalPosition(app.stage);
+        cursorSprite.x = mousePos.x - cursorSprite.width / 2; // Center the cursor sprite
+        cursorSprite.y = mousePos.y - cursorSprite.height / 2; // Center the cursor sprite
+    });
+
+    // Reset the cursor on pointer up
+    app.view.on('pointerup', () => {
+        app.stage.removeChild(cursorSprite);
+        app.view.off('mousemove'); // Remove mouse move event
+        isPlacingBuilding = false; // Disable placing mode
     });
 }
