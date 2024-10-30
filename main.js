@@ -1,5 +1,3 @@
-let dnaUnits = 100; // Example initial DNA Units
-
 function init() {
     // Setup the application and other components
     setupUI();
