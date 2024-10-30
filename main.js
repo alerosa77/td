@@ -1,104 +1,181 @@
-// DNA Units display with Saira Light font
-const dnaText = new PIXI.Text(`DNA Units: ${dnaUnits}`, {
-    fontFamily: 'Saira Light',
-    fontSize: 24,
-    fill: 0xffffff
+// main.js
+const app = new PIXI.Application({
+    width: window.innerWidth,
+    height: window.innerHeight,
+    backgroundColor: 0x1099bb
 });
-dnaText.anchor.set(0.5, 0);
-dnaText.x = app.screen.width / 2;
-dnaText.y = 10;
-app.stage.addChild(dnaText);
+document.body.appendChild(app.view);
 
-// Buttons for building structures
-const buttonContainer = new PIXI.Container();
-buttonContainer.y = app.screen.height - 70;
-buttonContainer.x = app.screen.width / 2 - 200; // Adjust for centered position
-app.stage.addChild(buttonContainer);
+const tileSize = 64;
+const mapWidth = 50;
+const mapHeight = 50;
 
-// Button configuration with new styles
-const structures = ['Power Plant', 'Extractor', 'Pylon', 'Laser Tower'];
-structures.forEach((structure, index) => {
-    const button = new PIXI.Graphics();
-    button.beginFill(0xaaaaaa, 0.7); // Lighter gray and 30% transparent
-    button.drawRoundedRect(0, 0, 90, 50, 10); // Wider button
-    button.endFill();
-    button.x = index * 100; // More space between buttons
+const textures = {}; // Stores textures for tiles and buildings
+let dnaUnits = 100; // Starting DNA Units
+const structureCosts = {
+    powerplant: 50,
+    extractor: 10,
+    pylon: 3,
+    lasertower: 20
+};
 
-    // Button label
-    const buttonText = new PIXI.Text(structure, {
+// Load the textures
+PIXI.Loader.shared
+    .add('grass1', 'tileset/grass1.png')
+    .add('grass2', 'tileset/grass2.png')
+    .add('dirt1', 'tileset/dirt1.png')
+    .add('dirt2', 'tileset/dirt2.png')
+    .add('flower1', 'tileset/flower1.png')
+    .add('flower2', 'tileset/flower2.png')
+    .add('rock1', 'tileset/rock1.png')
+    .add('rock2', 'tileset/rock2.png')
+    .add('wood1', 'tileset/wood1.png')
+    .add('wood2', 'tileset/wood2.png')
+    .add('resource', 'tileset/resource.png')
+    .add('powerplant', 'buildings/powerplant.png')
+    .add('extractor', 'buildings/extractor.png')
+    .add('pylon', 'buildings/pylon.png');
+
+// Load laser tower frames dynamically
+for (let i = 1; i <= 11; i++) {
+    PIXI.Loader.shared.add(`lasertower_frame${i}`, `buildings/lasertower_frame${i}.png`);
+}
+
+PIXI.Loader.shared.load(setup);
+
+function setup(loader, resources) {
+    textures.grass1 = resources.grass1.texture;
+    textures.grass2 = resources.grass2.texture;
+    textures.dirt1 = resources.dirt1.texture;
+    textures.dirt2 = resources.dirt2.texture;
+    textures.flower1 = resources.flower1.texture;
+    textures.flower2 = resources.flower2.texture;
+    textures.rock1 = resources.rock1.texture;
+    textures.rock2 = resources.rock2.texture;
+    textures.wood1 = resources.wood1.texture;
+    textures.wood2 = resources.wood2.texture;
+    textures.resource = resources.resource.texture;
+    textures.powerplant = resources.powerplant.texture;
+    textures.extractor = resources.extractor.texture;
+    textures.pylon = resources.pylon.texture;
+
+    // Create an array to hold laser tower frames
+    const lasertowerFrames = [];
+    for (let i = 1; i <= 11; i++) {
+        lasertowerFrames.push(resources[`lasertower_frame${i}`].texture);
+    }
+
+    const mapContainer = new PIXI.Container();
+    app.stage.addChild(mapContainer);
+
+    // Generate map tiles
+    const tiles = [];
+    for (let y = 0; y < mapHeight; y++) {
+        tiles[y] = [];
+        for (let x = 0; x < mapWidth; x++) {
+            const tileType = getRandomTileType();
+            const tileSprite = new PIXI.Sprite(textures[tileType]);
+            tileSprite.x = (x - y) * (tileSize / 2);
+            tileSprite.y = (x + y) * (tileSize / 4);
+            tileSprite.width = tileSprite.height = tileSize;
+            mapContainer.addChild(tileSprite);
+            tiles[y][x] = tileSprite;
+        }
+    }
+
+    // Center the map
+    mapContainer.x = app.screen.width / 2;
+    mapContainer.y = app.screen.height / 4;
+
+    // Add panning functionality
+    let dragging = false;
+    let lastPosition = { x: 0, y: 0 };
+    app.view.addEventListener('mousedown', (e) => { dragging = true; lastPosition = { x: e.clientX, y: e.clientY }; });
+    app.view.addEventListener('mouseup', () => { dragging = false; });
+    app.view.addEventListener('mousemove', (e) => {
+        if (dragging) {
+            const dx = e.clientX - lastPosition.x;
+            const dy = e.clientY - lastPosition.y;
+            mapContainer.x += dx;
+            mapContainer.y += dy;
+            lastPosition = { x: e.clientX, y: e.clientY };
+        }
+    });
+
+    // DNA Units display
+    const dnaText = new PIXI.Text(`DNA Units: ${dnaUnits}`, {
         fontFamily: 'Saira Light',
-        fontSize: 14,
+        fontSize: 24,
         fill: 0xffffff
     });
-    buttonText.anchor.set(0.5);
-    buttonText.x = 45;
-    buttonText.y = 25;
-    button.addChild(buttonText);
+    dnaText.anchor.set(0.5, 0);
+    dnaText.x = app.screen.width / 2;
+    dnaText.y = 10;
+    app.stage.addChild(dnaText);
 
-    buttonContainer.addChild(button);
-    button.interactive = true;
-    button.buttonMode = true;
+    // Buttons for building structures
+    const buttonContainer = new PIXI.Container();
+    buttonContainer.y = app.screen.height - 70;
+    buttonContainer.x = app.screen.width / 2 - 150; // Adjust positioning as needed
+    app.stage.addChild(buttonContainer);
 
-    // Handle build selection and preview
-    button.on('pointerdown', () => selectStructure(structure.toLowerCase()));
-});
+    // Create animated sprite using frames
+    const laserTower = new PIXI.AnimatedSprite(lasertowerFrames);
+    laserTower.animationSpeed = 0.1; // Set animation speed
 
-// Preview sprite for selected structure
-let previewSprite = null;
+    const structures = ['powerplant', 'extractor', 'pylon', 'lasertower'];
+    structures.forEach((structure, index) => {
+        const button = new PIXI.Graphics();
+        button.beginFill(0x666666);
+        button.drawRoundedRect(0, 0, 70, 50, 10);
+        button.endFill();
+        button.x = index * 80;
 
-// Function to select and preview a structure before placing it
-function selectStructure(type) {
-    // Remove existing preview sprite if any
-    if (previewSprite) {
-        app.stage.removeChild(previewSprite);
-        previewSprite = null;
-    }
+        // Text for button
+        const buttonText = new PIXI.Text(structure, {
+            fontFamily: 'Saira Light',
+            fontSize: 12,
+            fill: 0xffffff
+        });
+        buttonText.anchor.set(0.5);
+        buttonText.x = 35;
+        buttonText.y = 25;
+        button.addChild(buttonText);
 
+        buttonContainer.addChild(button);
+        button.interactive = true;
+        button.buttonMode = true;
+
+        // Click event for building structures
+        button.on('pointerdown', () => buildStructure(structure, dnaText));
+    });
+}
+
+// Random tile function
+function getRandomTileType() {
+    const rand = Math.random() * 100;
+    if (rand < 40) return 'grass1';
+    if (rand < 70) return 'grass2';
+    if (rand < 73) return 'dirt1';
+    if (rand < 76) return 'dirt2';
+    if (rand < 79) return 'flower1';
+    if (rand < 81) return 'flower2';
+    if (rand < 83) return 'rock1';
+    if (rand < 86) return 'rock2';
+    if (rand < 88) return 'wood1';
+    if (rand < 90) return 'wood2';
+    return 'resource';
+}
+
+// Build structure function
+function buildStructure(type, dnaText) {
     const cost = structureCosts[type];
     if (dnaUnits >= cost) {
-        // Create the transparent preview sprite
-        previewSprite = new PIXI.Sprite(textures[type]);
-        previewSprite.alpha = 0.5; // 50% transparent
-        app.stage.addChild(previewSprite);
-
-        // Track mouse movement for preview position
-        app.view.addEventListener('mousemove', updatePreviewPosition);
-
-        // Place structure on next click
-        app.view.addEventListener('click', () => {
-            if (dnaUnits >= cost) {
-                placeStructure(type);
-                dnaUnits -= cost;
-                dnaText.text = `DNA Units: ${dnaUnits}`;
-            }
-            app.stage.removeChild(previewSprite);
-            previewSprite = null;
-            app.view.removeEventListener('mousemove', updatePreviewPosition);
-        });
+        dnaUnits -= cost;
+        dnaText.text = `DNA Units: ${dnaUnits}`;
+        console.log(`Building ${type}`);
+        // Additional code for placing structure on map here
+    } else {
+        console.log(`Not enough DNA Units for ${type}`);
     }
-}
-
-// Update preview position based on mouse movement
-function updatePreviewPosition(event) {
-    if (previewSprite) {
-        const pos = app.renderer.plugins.interaction.mouse.global;
-        const tileX = Math.floor(pos.x / tileSize) * tileSize;
-        const tileY = Math.floor(pos.y / tileSize) * tileSize;
-        previewSprite.position.set(tileX, tileY);
-    }
-}
-
-// Place structure function
-function placeStructure(type) {
-    const pos = app.renderer.plugins.interaction.mouse.global;
-    const tileX = Math.floor(pos.x / tileSize) * tileSize;
-    const tileY = Math.floor(pos.y / tileSize) * tileSize;
-
-    const structureSprite = new PIXI.Sprite(textures[type]);
-    structureSprite.x = tileX;
-    structureSprite.y = tileY;
-    structureSprite.width = tileSize;
-    structureSprite.height = tileSize;
-
-    app.stage.addChild(structureSprite);
 }
