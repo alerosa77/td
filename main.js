@@ -146,3 +146,10 @@ function canAffordBuilding(buildingType) {
     };
     return dnaUnits >= buildingCosts[buildingType];
 }
+
+app.view.addEventListener('pointerdown', (e) => {
+    if (isPlacingBuilding) {
+        const mousePos = e.data.getLocalPosition(app.stage);
+        placeBuilding(mousePos.x, mousePos.y);
+    }
+});
