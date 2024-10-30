@@ -59,6 +59,6 @@ function onBuildingButtonClick(buildingName) {
         app.stage.removeChild(cursorSprite);
         app.view.off('mousemove'); // Remove mouse move event
         isPlacingBuilding = false; // Disable placing mode
+        currentBuilding = null; // Clear current building selection
     });
 }
-
