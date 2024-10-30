@@ -5,7 +5,6 @@ const tileSize = 64;
 const mapWidth = 50;  // Map width
 const mapHeight = 50; // Map height
 const textures = {};
-let dnaUnits = 100; // Initial DNA Units
 let currentBuilding = null; // Track the selected building
 let isPlacingBuilding = false; // Track if the player is placing a building
 
