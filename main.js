@@ -9,15 +9,8 @@ document.body.appendChild(app.view);
 const tileSize = 64;
 const mapWidth = 50;
 const mapHeight = 50;
-
-const textures = {}; // Stores textures for tiles and buildings
-let dnaUnits = 100; // Starting DNA Units
-const structureCosts = {
-    powerplant: 50,
-    extractor: 10,
-    pylon: 3,
-    lasertower: 20
-};
+const textures = {};
+let dnaUnits = 100;
 
 // Load the textures
 PIXI.Loader.shared
@@ -83,99 +76,4 @@ function setup(loader, resources) {
         }
     }
 
-    // Center the map
-    mapContainer.x = app.screen.width / 2;
-    mapContainer.y = app.screen.height / 4;
-
-    // Add panning functionality
-    let dragging = false;
-    let lastPosition = { x: 0, y: 0 };
-    app.view.addEventListener('mousedown', (e) => { dragging = true; lastPosition = { x: e.clientX, y: e.clientY }; });
-    app.view.addEventListener('mouseup', () => { dragging = false; });
-    app.view.addEventListener('mousemove', (e) => {
-        if (dragging) {
-            const dx = e.clientX - lastPosition.x;
-            const dy = e.clientY - lastPosition.y;
-            mapContainer.x += dx;
-            mapContainer.y += dy;
-            lastPosition = { x: e.clientX, y: e.clientY };
-        }
-    });
-
-    // DNA Units display
-    const dnaText = new PIXI.Text(`DNA Units: ${dnaUnits}`, {
-        fontFamily: 'Saira Light',
-        fontSize: 24,
-        fill: 0xffffff
-    });
-    dnaText.anchor.set(0.5, 0);
-    dnaText.x = app.screen.width / 2;
-    dnaText.y = 10;
-    app.stage.addChild(dnaText);
-
-    // Buttons for building structures
-    const buttonContainer = new PIXI.Container();
-    buttonContainer.y = app.screen.height - 70;
-    buttonContainer.x = app.screen.width / 2 - 150; // Adjust positioning as needed
-    app.stage.addChild(buttonContainer);
-
-    // Create animated sprite using frames
-    const laserTower = new PIXI.AnimatedSprite(lasertowerFrames);
-    laserTower.animationSpeed = 0.1; // Set animation speed
-
-    const structures = ['powerplant', 'extractor', 'pylon', 'lasertower'];
-    structures.forEach((structure, index) => {
-        const button = new PIXI.Graphics();
-        button.beginFill(0x666666);
-        button.drawRoundedRect(0, 0, 70, 50, 10);
-        button.endFill();
-        button.x = index * 80;
-
-        // Text for button
-        const buttonText = new PIXI.Text(structure, {
-            fontFamily: 'Saira Light',
-            fontSize: 12,
-            fill: 0xffffff
-        });
-        buttonText.anchor.set(0.5);
-        buttonText.x = 35;
-        buttonText.y = 25;
-        button.addChild(buttonText);
-
-        buttonContainer.addChild(button);
-        button.interactive = true;
-        button.buttonMode = true;
-
-        // Click event for building structures
-        button.on('pointerdown', () => buildStructure(structure, dnaText));
-    });
-}
-
-// Random tile function
-function getRandomTileType() {
-    const rand = Math.random() * 100;
-    if (rand < 40) return 'grass1';
-    if (rand < 70) return 'grass2';
-    if (rand < 73) return 'dirt1';
-    if (rand < 76) return 'dirt2';
-    if (rand < 79) return 'flower1';
-    if (rand < 81) return 'flower2';
-    if (rand < 83) return 'rock1';
-    if (rand < 86) return 'rock2';
-    if (rand < 88) return 'wood1';
-    if (rand < 90) return 'wood2';
-    return 'resource';
-}
-
-// Build structure function
-function buildStructure(type, dnaText) {
-    const cost = structureCosts[type];
-    if (dnaUnits >= cost) {
-        dnaUnits -= cost;
-        dnaText.text = `DNA Units: ${dnaUnits}`;
-        console.log(`Building ${type}`);
-        // Additional code for placing structure on map here
-    } else {
-        console.log(`Not enough DNA Units for ${type}`);
-    }
-}
+  
