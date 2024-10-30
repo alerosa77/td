@@ -42,19 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
             textures[key] = resources[key].texture;
         });
 
-        // Create an array to hold laser tower frames
-        const lasertowerFrames = [];
-        const frameWidth = 64; // Adjust this to the actual width of each frame
-        const frameHeight = 64; // Adjust this to the actual height of each frame
-
-        // Loop to extract frames from the single image
-        for (let i = 0; i < 11; i++) {
-            lasertowerFrames.push(new PIXI.Texture(
-                textures.lasertower,
-                new PIXI.Rectangle(i * frameWidth, 0, frameWidth, frameHeight) // Extract frame
-            ));
-        }
-
         createMap(); // Now this will have access to app and the map dimensions
         setupUI();   // Ensure this function is defined elsewhere
 
@@ -71,50 +58,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Create the game map
 function createMap() {
+    const mapContainer = new PIXI.Container();
+    app.stage.addChild(mapContainer);
+
+    const totalTiles = mapWidth * mapHeight;
+    const resourceTileCount = Math.floor(totalTiles * 0.05); // 5% of total tiles
+    const groundTileCount = totalTiles - resourceTileCount;
+
     for (let y = 0; y < mapHeight; y++) {
         for (let x = 0; x < mapWidth; x++) {
-            const tile = new PIXI.Sprite(textures.grass1); // Just an example
-            tile.x = x * tileSize;
-            tile.y = y * tileSize;
-            app.stage.addChild(tile);
+            const tileType = getRandomTileType(groundTileCount, resourceTileCount);
+            const tileSprite = new PIXI.Sprite(textures[tileType]);
+            tileSprite.x = (x - y) * (tileSize / 2);
+            tileSprite.y = (x + y) * (tileSize / 4);
+            tileSprite.width = tileSprite.height = tileSize;
+            mapContainer.addChild(tileSprite);
         }
     }
-}
 
-// Handle clicks on the map
-function handleClickOnMap(tileX, tileY) {
-    if (isPlacingBuilding && currentBuilding) {
-        if (canAffordBuilding(currentBuilding)) {
-            placeBuilding(currentBuilding, tileX, tileY);
-            isPlacingBuilding = false; // Reset after placement
-            currentBuilding = null; // Clear selection
-            resetCursor(); // Reset cursor back to normal
-        } else {
-            alert("Not enough DNA Units!");
-        }
-    }
-}
+    mapContainer.x = app.screen.width / 2;
+    mapContainer.y = app.screen.height / 4;
 
-// Reset the cursor to default
-function resetCursor() {
-    // Logic to reset cursor to default, e.g. changing the mouse style
-}
-
-// Place the selected building
-function placeBuilding(buildingType, tileX, tileY) {
-    const buildingSprite = new PIXI.Sprite(textures[buildingType.toLowerCase().replace(' ', '')]);
-    buildingSprite.x = tileX * tileSize;
-    buildingSprite.y = tileY * tileSize;
-    app.stage.addChild(buildingSprite);
-}
-
-// Check if the player can afford a building
-function canAffordBuilding(buildingType) {
-    const buildingCosts = {
-        "Power Plant": 30,
-        "Extractor": 20,
-        "Pylon": 10,
-        "Laser Tower": 40,
-    };
-    return dnaUnits >= buildingCosts[buildingType];
-}
+    let dragging = false;
+    let lastPosition = { x: 0, y: 0 };
+    app.view.addEventListener('mousedown', (e) => { dragging = true; lastPosition = { x: e.clientX, y: e.clientY }
