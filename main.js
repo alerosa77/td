@@ -34,3 +34,22 @@ init();
 
 // Listen for the `pointerup` event globally
 app.view.on('pointerup', placeBuilding);
+
+let skybox; // Declare a variable for the skybox
+
+function loadSkybox() {
+    const skyboxTexture = PIXI.Texture.from('buildings/skybox.png'); // Load the skybox texture
+    skybox = new PIXI.Sprite(skyboxTexture);
+    skybox.width = app.screen.width; // Set the width to match the screen
+    skybox.height = app.screen.height; // Set the height to match the screen
+    skybox.zIndex = -1; // Ensure it is behind all other elements
+    app.stage.addChild(skybox);
+
+    // Create an animation loop to pan the skybox
+    app.ticker.add(() => {
+        skybox.x -= 0.05; // Move skybox left at 5% speed
+        if (skybox.x < -skybox.width) {
+            skybox.x = 0; // Reset position when it goes off screen
+        }
+    });
+}
