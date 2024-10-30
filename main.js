@@ -58,22 +58,11 @@ function setup(loader, resources) {
         lasertowerFrames.push(resources[`lasertower_frame${i}`].texture);
     }
 
-    const mapContainer = new PIXI.Container();
-    app.stage.addChild(mapContainer);
-
-    // Generate map tiles
-    const tiles = [];
-    for (let y = 0; y < mapHeight; y++) {
-        tiles[y] = [];
-        for (let x = 0; x < mapWidth; x++) {
-            const tileType = getRandomTileType();
-            const tileSprite = new PIXI.Sprite(textures[tileType]);
-            tileSprite.x = (x - y) * (tileSize / 2);
-            tileSprite.y = (x + y) * (tileSize / 4);
-            tileSprite.width = tileSprite.height = tileSize;
-            mapContainer.addChild(tileSprite);
-            tiles[y][x] = tileSprite;
-        }
-    }
-
+   function setup(loader, resources) {
+    Object.keys(resources).forEach((key) => {
+        textures[key] = resources[key].texture;
+    });
+    createMap();
+    setupUI();
+}
   
