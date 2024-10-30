@@ -20,8 +20,8 @@ PIXI.Loader.shared
   .add('dirt2', 'tileset/dirt2.png')
   .add('flower1', 'tileset/flower1.png')
   .add('flower2', 'tileset/flower2.png')
-  .add('rocks1', 'tileset/rock1.png')
-  .add('rocks2', 'tileset/rock2.png')
+  .add('rock1', 'tileset/rock1.png')
+  .add('rock2', 'tileset/rock2.png')
   .add('wood1', 'tileset/wood1.png')
   .add('wood2', 'tileset/wood2.png')
   .add('resource', 'tileset/resource.png')
@@ -34,8 +34,8 @@ function setup(loader, resources) {
   textures.dirt2 = resources.dirt2.texture;
   textures.flower1 = resources.flower1.texture;
   textures.flower2 = resources.flower2.texture;
-  textures.rocks1 = resources.rocks1.texture;
-  textures.rocks2 = resources.rocks2.texture;
+  textures.rock1 = resources.rock1.texture;
+  textures.rock2 = resources.rock2.texture;
   textures.wood1 = resources.wood1.texture;
   textures.wood2 = resources.wood2.texture;
   textures.resource = resources.resource.texture;
