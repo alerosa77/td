@@ -5,7 +5,6 @@ const tileSize = 64;
 const mapWidth = 50;  // Map width
 const mapHeight = 50; // Map height
 const textures = {};
-let isPlacingBuilding = false; // Track if the player is placing a building
 
 document.addEventListener('DOMContentLoaded', () => {
     app = new PIXI.Application({
