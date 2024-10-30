@@ -37,20 +37,9 @@ for (let i = 1; i <= 11; i++) {
 PIXI.Loader.shared.load(setup);
 
 function setup(loader, resources) {
-    textures.grass1 = resources.grass1.texture;
-    textures.grass2 = resources.grass2.texture;
-    textures.dirt1 = resources.dirt1.texture;
-    textures.dirt2 = resources.dirt2.texture;
-    textures.flower1 = resources.flower1.texture;
-    textures.flower2 = resources.flower2.texture;
-    textures.rock1 = resources.rock1.texture;
-    textures.rock2 = resources.rock2.texture;
-    textures.wood1 = resources.wood1.texture;
-    textures.wood2 = resources.wood2.texture;
-    textures.resource = resources.resource.texture;
-    textures.powerplant = resources.powerplant.texture;
-    textures.extractor = resources.extractor.texture;
-    textures.pylon = resources.pylon.texture;
+    Object.keys(resources).forEach((key) => {
+        textures[key] = resources[key].texture;
+    });
 
     // Create an array to hold laser tower frames
     const lasertowerFrames = [];
@@ -58,11 +47,6 @@ function setup(loader, resources) {
         lasertowerFrames.push(resources[`lasertower_frame${i}`].texture);
     }
 
-   function setup(loader, resources) {
-    Object.keys(resources).forEach((key) => {
-        textures[key] = resources[key].texture;
-    });
-    createMap();
-    setupUI();
+    createMap(); // Make sure this function is defined elsewhere
+    setupUI();   // Make sure this function is defined elsewhere
 }
-  
