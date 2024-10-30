@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isometric Tower Defense</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.2.4/pixi.min.js"></script>
+</head>
+<body>
+    <script>
+        const app = new PIXI.Application({ width: 800, height: 600 });
+        document.body.appendChild(app.view);
+
+        // Load assets
+        const assetNames = [
+            'grass1.png', 'grass2.png', 'dirt1.png', 'dirt2.png',
+            'flower1.png', 'flower2.png', 'rock1.png', 'rock2.png',
+            'wood1.png', 'wood2.png', 'resource.png'
+        ];
+
+        const textures = {};
+        assetNames.forEach(name => {
+            textures[name] = PIXI.Texture.from(`tileset/${name}`);
+        });
+
+        const tileMap = [];
+	const tileTypes = [
+  { type: 'grass1', image: 'tileset/grass1.png' },
+  { type: 'grass2', image: 'tileset/grass2.png' },
+  { type: 'dirt1', image: 'tileset/dirt1.png' },
+  { type: 'dirt2', image: 'tileset/dirt2.png' },
+  { type: 'flower1', image: 'tileset/flower1.png' },
+  { type: 'flower2', image: 'tileset/flower2.png' },
+  { type: 'rock1', image: 'tileset/rock1.png' },
+  { type: 'rock2', image: 'tileset/rock2.png' },
+  { type: 'wood1', image: 'tileset/wood1.png' },
+  { type: 'wood2', image: 'tileset/wood2.png' },
+  { type: 'resource', image: 'tileset/resource.png' },
+];
+
+        // Create weighted tile selection
+        const weightedTiles = [];
+        tileTypes.forEach(tile => {
+            for (let i = 0; i < tile.weight * 100; i++) {
+                weightedTiles.push(tile.name);
+            }
+        });
+
+        const rows = 20;
+        const cols = 20;
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+                const tileName = weightedTiles[Math.floor(Math.random() * weightedTiles.length)];
+                tileMap.push({ name: tileName, x, y });
+            }
+        }
+
+        // Function to draw the isometric grid
+        function drawIsometricGrid() {
+            const tileWidth = 50;
+            const tileHeight = 25;
+
+            tileMap.forEach(tile => {
+                const sprite = new PIXI.Sprite(textures[tile.name + '.png']);
+                sprite.anchor.set(0.5);
+                sprite.x = (tile.x - tile.y) * (tileWidth / 2) + app.renderer.width / 2;
+                sprite.y = (tile.x + tile.y) * (tileHeight / 2);
+                app.stage.addChild(sprite);
+            });
+        }
+
+        app.loader.load(drawIsometricGrid);
+    </script>
+</body>
+</html>
