@@ -35,7 +35,17 @@ PIXI.Loader.shared
     .add('powerplant', 'buildings/powerplant.png')
     .add('extractor', 'buildings/extractor.png')
     .add('pylon', 'buildings/pylon.png')
-    .add('lasertower', 'buildings/lasertower.png')
+    .add('lasertower_frame1', 'buildings/lasertower_frame1.png')
+    .add('lasertower_frame2', 'buildings/lasertower_frame2.png')
+    .add('lasertower_frame3', 'buildings/lasertower_frame3.png')
+    .add('lasertower_frame4', 'buildings/lasertower_frame4.png')
+    .add('lasertower_frame5', 'buildings/lasertower_frame5.png')
+    .add('lasertower_frame6', 'buildings/lasertower_frame6.png')
+    .add('lasertower_frame7', 'buildings/lasertower_frame7.png')
+    .add('lasertower_frame8', 'buildings/lasertower_frame8.png')
+    .add('lasertower_frame9', 'buildings/lasertower_frame9.png')
+    .add('lasertower_frame10', 'buildings/lasertower_frame10.png')
+    .add('lasertower_frame11', 'buildings/lasertower_frame11.png')
     .load(setup);
 
 function setup(loader, resources) {
@@ -53,7 +63,19 @@ function setup(loader, resources) {
     textures.powerplant = resources.powerplant.texture;
     textures.extractor = resources.extractor.texture;
     textures.pylon = resources.pylon.texture;
-    textures.lasertower = resources.lasertower.texture;
+    const lasertowerFrames = [
+    resources.lasertower_frame1.texture,
+    resources.lasertower_frame2.texture,
+    resources.lasertower_frame3.texture,
+        resources.lasertower_frame4.texture,
+        resources.lasertower_frame5.texture,
+        resources.lasertower_frame6.texture,
+        resources.lasertower_frame7.texture,
+        resources.lasertower_frame8.texture,
+        resources.lasertower_frame9.texture,
+        resources.lasertower_frame10.texture,
+        resources.lasertower_frame11.texture,
+  ];
 
     const mapContainer = new PIXI.Container();
     app.stage.addChild(mapContainer);
@@ -109,6 +131,10 @@ function setup(loader, resources) {
     buttonContainer.x = app.screen.width / 2 - 150; // Adjust positioning as needed
     app.stage.addChild(buttonContainer);
 
+  // Create animated sprite using frames
+  const laserTower = new PIXI.AnimatedSprite(lasertowerFrames);
+  laserTower.animationSpeed = 0.1; // Set animation speed
+    
     const structures = ['powerplant', 'extractor', 'pylon', 'lasertower'];
     structures.forEach((structure, index) => {
         const button = new PIXI.Graphics();
