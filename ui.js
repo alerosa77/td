@@ -1,7 +1,8 @@
 let currentBuilding = null; // Track the current building type
 let isPlacingBuilding = false; // Flag to track if placing mode is active
 
-function setupUI() {
+// Make setupUI globally accessible
+window.setupUI = function() {
     const buttonContainer = new PIXI.Container();
     app.stage.addChild(buttonContainer);
 
