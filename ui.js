@@ -1,3 +1,6 @@
+let currentBuilding = null; // Track the current building type
+let isPlacingBuilding = false; // Flag to track if placing mode is active
+
 function setupUI() {
     const buttonContainer = new PIXI.Container();
     app.stage.addChild(buttonContainer);
@@ -23,6 +26,13 @@ function setupUI() {
 
         buttonContainer.addChild(button);
     });
+
+    // Display for DNA Units
+    const dnaUnitsText = new PIXI.Text(`DNA Units: ${dnaUnits}`, { fontFamily: 'Saira Light', fontSize: 24, fill: 0xFFFFFF });
+    dnaUnitsText.anchor.set(0.5);
+    dnaUnitsText.x = app.screen.width / 2; // Centered horizontally
+    dnaUnitsText.y = 20; // Positioned at the top
+    app.stage.addChild(dnaUnitsText);
 }
 
 function onBuildingButtonClick(buildingName) {
