@@ -1,25 +1,21 @@
-// dna.js
 let dnaUnits = 100; // Initial DNA Units
 
-function getDnaUnits() {
-    return dnaUnits;
+function canAffordBuilding(buildingType) {
+    const buildingCosts = {
+        "Power Plant": 30,
+        "Extractor": 20,
+        "Pylon": 10,
+        "Laser Tower": 40,
+    };
+    return dnaUnits >= buildingCosts[buildingType];
 }
 
-function addDnaUnits(amount) {
-    dnaUnits += amount;
-    console.log(`Added DNA Units: ${amount}. Total: ${dnaUnits}`);
-}
-
-function subtractDnaUnits(amount) {
-    if (amount <= dnaUnits) {
-        dnaUnits -= amount;
-        console.log(`Subtracted DNA Units: ${amount}. Total: ${dnaUnits}`);
-        return true; // Successfully subtracted
-    }
-    console.log(`Not enough DNA Units to subtract: ${amount}. Total: ${dnaUnits}`);
-    return false; // Not enough units
-}
-
-function canAffordBuilding(building) {
-    return getBuildingCost(building) <= dnaUnits;
+function deductCost(buildingType) {
+    const buildingCosts = {
+        "Power Plant": 30,
+        "Extractor": 20,
+        "Pylon": 10,
+        "Laser Tower": 40,
+    };
+    dnaUnits -= buildingCosts[buildingType]; // Deduct cost from DNA Units
 }
