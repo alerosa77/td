@@ -20,8 +20,8 @@ PIXI.Loader.shared
   .add('dirt2', 'tileset/dirt2.png')
   .add('flower1', 'tileset/flower1.png')
   .add('flower2', 'tileset/flower2.png')
-  .add('rock1', 'tileset/rock1.png')
-  .add('rock2', 'tileset/rock2.png')
+  .add('rock1', 'tileset/rock1.png') // Use new names
+  .add('rock2', 'tileset/rock2.png') // Use new names
   .add('wood1', 'tileset/wood1.png')
   .add('wood2', 'tileset/wood2.png')
   .add('resource', 'tileset/resource.png')
@@ -34,8 +34,8 @@ function setup(loader, resources) {
   textures.dirt2 = resources.dirt2.texture;
   textures.flower1 = resources.flower1.texture;
   textures.flower2 = resources.flower2.texture;
-  textures.rock1 = resources.rock1.texture;
-  textures.rock2 = resources.rock2.texture;
+  textures.rock1 = resources.rock1.texture; // Use new names
+  textures.rock2 = resources.rock2.texture; // Use new names
   textures.wood1 = resources.wood1.texture;
   textures.wood2 = resources.wood2.texture;
   textures.resource = resources.resource.texture;
@@ -96,8 +96,8 @@ function setup(loader, resources) {
     if (rand < 60) return 'dirt2';
     if (rand < 65) return 'flower1';
     if (rand < 70) return 'flower2';
-    if (rand < 75) return 'rock1';
-    if (rand < 80) return 'rock2';
+    if (rand < 75) return 'rock1'; // Use new names
+    if (rand < 80) return 'rock2'; // Use new names
     if (rand < 85) return 'wood1';
     if (rand < 90) return 'wood2';
     return 'resource'; // Resource tiles ~10%
