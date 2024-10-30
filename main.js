@@ -1,6 +1,8 @@
 // main.js
+let app; // Declare app in a wider scope
+
 document.addEventListener('DOMContentLoaded', () => {
-    const app = new PIXI.Application({
+    app = new PIXI.Application({
         width: window.innerWidth,
         height: window.innerHeight,
         backgroundColor: 0x1099bb
@@ -29,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .add('powerplant', 'buildings/powerplant.png')
         .add('extractor', 'buildings/extractor.png')
         .add('pylon', 'buildings/pylon.png')
-        .add('lasertower', 'buildings/lasertower.png'); // Add the sprite sheet
+        .add('lasertower', 'buildings/lasertower.png'); // Load the single image for the laser tower
 
     PIXI.Loader.shared.load(setup);
 
@@ -40,8 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Create an array to hold laser tower frames
         const lasertowerFrames = [];
-        const frameWidth = 64; // Width of each frame
-        const frameHeight = 64; // Height of each frame
+        const frameWidth = 64; // Adjust this to the actual width of each frame
+        const frameHeight = 64; // Adjust this to the actual height of each frame
+
+        // Loop to extract frames from the single image
         for (let i = 0; i < 11; i++) {
             lasertowerFrames.push(new PIXI.Texture(
                 textures.lasertower,
@@ -49,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ));
         }
 
-        createMap(); // Ensure this function is defined elsewhere
+        createMap(); // Now this will have access to app
         setupUI();   // Ensure this function is defined elsewhere
     }
 });
