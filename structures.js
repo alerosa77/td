@@ -1,28 +1,42 @@
 // structures.js
-const structureCosts = {
-    powerplant: 50,
-    extractor: 10,
-    pylon: 3,
-    lasertower: 20
+const buildingCosts = {
+    "Power Plant": 50,
+    "Extractor": 30,
+    "Pylon": 20,
+    "Laser Tower": 70
 };
 
-function buildStructure(type, dnaText) {
-    const cost = structureCosts[type];
-    if (dnaUnits >= cost) {
-        dnaUnits -= cost;
-        updateDNADisplay(dnaText);
-        if (type === 'lasertower') animateLaserTower();
+// Function to place a building on the map
+function placeBuilding(building, x, y) {
+    const buildingTexture = getBuildingTexture(building);
+    if (buildingTexture) {
+        const buildingSprite = new PIXI.Sprite(buildingTexture);
+        buildingSprite.x = x * tileSize;
+        buildingSprite.y = y * tileSize;
+        app.stage.addChild(buildingSprite);
+        console.log(`Placed ${building} at (${x}, ${y})`); // Debug: Log placement
     } else {
-        console.log(`Not enough DNA Units for ${type}`);
+        console.log(`Invalid building type: ${building}`);
     }
 }
 
-function animateLaserTower() {
-    const laserTower = new PIXI.AnimatedSprite([
-        textures['lasertower_frame1'],
-        textures['lasertower_frame11'],
-        // Add additional laser tower frames here
-    ]);
-    laserTower.animationSpeed = 0.1;
-    laserTower.play();
+// Function to get the texture for a building
+function getBuildingTexture(building) {
+    switch (building) {
+        case "Power Plant":
+            return textures.powerplant;
+        case "Extractor":
+            return textures.extractor;
+        case "Pylon":
+            return textures.pylon;
+        case "Laser Tower":
+            return textures.lasertower;
+        default:
+            return null; // If the building type is not recognized
+    }
+}
+
+// Function to get the cost of a building
+function getBuildingCost(building) {
+    return buildingCosts[building] || 0; // Return 0 if building type is not recognized
 }
