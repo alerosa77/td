@@ -1,41 +1,71 @@
 // ui.js
+let selectedBuilding = null; // Variable to track the selected building type
+
 function setupUI() {
+    const uiContainer = new PIXI.Container();
+    app.stage.addChild(uiContainer);
+
+    // Create DNA Units display
     const dnaText = new PIXI.Text(`DNA Units: ${dnaUnits}`, {
         fontFamily: 'Saira Light',
         fontSize: 24,
         fill: 0xffffff
     });
-    dnaText.anchor.set(0.5, 0);
-    dnaText.x = app.screen.width / 2;
+    dnaText.x = 10;
     dnaText.y = 10;
-    app.stage.addChild(dnaText);
+    uiContainer.addChild(dnaText);
 
+    // Create buttons
+    const buttonNames = ["Power Plant", "Extractor", "Pylon", "Laser Tower"];
+    const buttonWidth = 180; // Adjusted button width
+    const buttonHeight = 50; // Button height
+    const buttonSpacing = 30; // Space between buttons
     const buttonContainer = new PIXI.Container();
-    buttonContainer.y = app.screen.height - 70;
-    buttonContainer.x = app.screen.width / 2 - 150;
-    app.stage.addChild(buttonContainer);
+    buttonContainer.y = app.view.height - buttonHeight - 10; // Positioning at the bottom
 
-    const structures = ['powerplant', 'extractor', 'pylon', 'lasertower'];
-    structures.forEach((structure, index) => {
+    buttonNames.forEach((name, index) => {
         const button = new PIXI.Graphics();
-        button.beginFill(0x666666);
-        button.drawRoundedRect(0, 0, 70, 50, 10);
+        button.beginFill(0xcccccc, 0.3); // Light gray with 30% transparency
+        button.drawRect(0, 0, buttonWidth, buttonHeight);
         button.endFill();
-        button.x = index * 80;
-
-        const buttonText = new PIXI.Text(structure, {
-            fontFamily: 'Saira Light',
-            fontSize: 12,
-            fill: 0xffffff
-        });
-        buttonText.anchor.set(0.5);
-        buttonText.x = 35;
-        buttonText.y = 25;
-        button.addChild(buttonText);
-
-        buttonContainer.addChild(button);
+        button.x = index * (buttonWidth + buttonSpacing);
         button.interactive = true;
         button.buttonMode = true;
-        button.on('pointerdown', () => buildStructure(structure, dnaText));
+
+        button.on('pointerdown', () => {
+            selectedBuilding = name; // Set the selected building
+            updateCursor(); // Change the cursor to the building sprite
+        });
+
+        const buttonText = new PIXI.Text(name, {
+            fontFamily: 'Saira Light',
+            fontSize: 18,
+            fill: 0x000000
+        });
+        buttonText.x = button.x + buttonWidth / 2 - buttonText.width / 2;
+        buttonText.y = button.y + buttonHeight / 2 - buttonText.height / 2;
+
+        buttonContainer.addChild(button);
+        buttonContainer.addChild(buttonText);
+    });
+
+    uiContainer.addChild(buttonContainer);
+
+    // Add a listener for clicks to place buildings
+    app.stage.interactive = true;
+    app.stage.on('pointerdown', (event) => {
+        if (selectedBuilding) {
+            const position = event.data.getLocalPosition(app.stage);
+            const tileX = Math.floor(position.x / tileSize);
+            const tileY = Math.floor(position.y / tileSize);
+            
+            // Check if the user has enough DNA Units
+            if (canAffordBuilding(selectedBuilding)) {
+                placeBuilding(selectedBuilding, tileX, tileY);
+                updateDnaUnits(selectedBuilding); // Deduct DNA Units based on the building
+            }
+        }
     });
 }
+
+// F
